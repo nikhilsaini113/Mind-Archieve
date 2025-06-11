@@ -1,8 +1,6 @@
 import mongoose, { model, Schema } from "mongoose";
 
-mongoose.connect(
-  "mongodb+srv://admin:mongodb@cluster0.cbpz7zm.mongodb.net/mindArchive"
-);
+mongoose.connect(process.env.DB_LINK as string);
 
 const userSchema = new Schema({
   username: { type: String, unique: true },
