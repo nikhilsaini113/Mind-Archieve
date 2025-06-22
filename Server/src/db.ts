@@ -1,5 +1,5 @@
 import mongoose, { model, Schema } from "mongoose";
-
+import "dotenv/config";
 mongoose.connect(process.env.DB_LINK as string);
 
 const userSchema = new Schema({
@@ -18,3 +18,15 @@ const contentSchema = new Schema({
 });
 
 export const contentModel = model("Content", contentSchema);
+
+const linkSchema = new Schema({
+  hash: String,
+  userId: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+    required: true,
+    unique: true,
+  },
+});
+
+export const linkModel = model("Links", linkSchema);

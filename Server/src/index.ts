@@ -1,9 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import { contentModel, userModel } from "./db";
+import { contentModel, linkModel, userModel } from "./db";
 import "dotenv/config";
 import { userMiddleware } from "./middleware";
+import { random } from "./utils";
 const app = express();
 app.use(express.json());
 app.post("/api/v1/signup", async (req, res) => {
@@ -62,7 +63,6 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
     userId: req.userId,
     tags: [],
   });
-  console.log("hello");
   res.json({
     message: "Content added",
   });
@@ -95,8 +95,73 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
   });
 });
 
-app.post("/api/v1/brain/share", (req, res) => {});
+app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
+  const share = req.body.share;
+  //@ts-ignore
+  const userId = req.userId;
+  if (share) {
+    const existingLink = await linkModel.findOne({
+      userId: userId,
+    });
+    if (existingLink) {
+      res.json({
+        hash: existingLink.hash,
+      });
+      return;
+    }
+    const hash = random(10);
+    await linkModel.create({
+      userId: userId,
+      hash: hash,
+    });
 
-app.get("/api/v1/brain/:shareLink", (req, res) => {});
+    res.json({
+      hash,
+    });
+  } else {
+    await linkModel.deleteOne({
+      userId: userId,
+    });
+
+    res.json({
+      message: "Removed link",
+    });
+  }
+});
+
+app.get("/api/v1/brain/:shareLink", async (req, res) => {
+  const hash = req.params.shareLink;
+
+  const link = await linkModel.findOne({
+    hash,
+  });
+
+  if (!link) {
+    res.status(411).json({
+      message: "Sorry incorrect input",
+    });
+    return;
+  }
+  // userId
+  const content = await contentModel.find({
+    userId: link.userId,
+  });
+
+  const user = await userModel.findOne({
+    _id: link.userId,
+  });
+
+  if (!user) {
+    res.status(411).json({
+      message: "user not found",
+    });
+    return;
+  }
+
+  res.json({
+    username: user.username,
+    content: content,
+  });
+});
 
 app.listen(process.env.PORT);
