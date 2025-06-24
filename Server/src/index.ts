@@ -5,8 +5,10 @@ import { contentModel, linkModel, userModel } from "./db";
 import "dotenv/config";
 import { userMiddleware } from "./middleware";
 import { random } from "./utils";
+import cors from "cors";
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.post("/api/v1/signup", async (req, res) => {
   //Left - zod validation, hash the password
   const username = req.body.username;

@@ -29,11 +29,46 @@
 //   );
 // }
 
+import { useRef, useState } from "react";
 import { CrossIcon } from "../icons/CrossIcon";
 import { Button } from "./Button";
 import { Input } from "./Input";
+import { BACKEND_URL } from "../config";
+import axios from "axios";
+
+enum ContentType {
+  Youtube = "youtube",
+  Twitter = "twitter",
+  Github = "github",
+}
 
 export function AddContentModal({ open, onClose }) {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const linkRef = useRef<HTMLInputElement>(null);
+  const [type, setType] = useState("");
+  async function addContent() {
+    const title = titleRef.current?.value;
+    const link = linkRef.current?.value;
+    if (!title || !link || !type) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    await axios.post(
+      `${BACKEND_URL}/api/v1/content`,
+      {
+        link,
+        title,
+        type,
+      },
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    onClose();
+  }
   return (
     <div>
       {open && (
@@ -48,15 +83,35 @@ export function AddContentModal({ open, onClose }) {
                   </div>
                 </div>
                 <div>
-                  <Input placeholder={"Title"} />
-                  <Input placeholder={"Link"} />
+                  <Input reference={titleRef} placeholder={"Title"} />
+                  <Input reference={linkRef} placeholder={"Link"} />
                 </div>
-                <div>
-                  <h1>Type</h1>
-                  <div className="flex gap-1 justify-center pb-2"></div>
+                <div className="pt-2">
+                  <label
+                    htmlFor="type"
+                    className="block text-sm font-medium text-gray-800"
+                  ></label>
+                  <select
+                    id="type"
+                    name="type"
+                    className="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select a type
+                    </option>
+                    <option value="youtube">YouTube</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="gist">Github Gist</option>
+                  </select>
                 </div>
-                <div className="flex justify-center">
-                  <Button variant="primary" text="Submit" />
+                <div className="flex justify-center pt-4">
+                  <Button
+                    onClick={addContent}
+                    variant="primary"
+                    text="Submit"
+                  />
                 </div>
               </span>
             </div>
