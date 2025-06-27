@@ -6,58 +6,95 @@ import { PlusIcon } from "../icons/PlusIcon";
 import { ShareIcon } from "../icons/ShareIcon";
 import { Sidebar } from "../components/Sidebar";
 import { useContent } from "../hooks/useContent";
-
+import axios from "axios";
+import { BACKEND_URL } from "../config";
 function Dashboard() {
   const [contentModalOpen, setContentModalOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
   const { contents, refresh } = useContent();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     refresh();
   }, [contentModalOpen]);
+
+  const handleSelectType = (type: string) => {
+    setSelectedType((prev) => (prev === type ? null : type));
+  };
+
+  const filteredContents = contents
+    .filter((content: any) =>
+      selectedType ? content.type === selectedType : true
+    )
+    .filter((content: any) =>
+      content.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  async function shareBrain() {
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/api/v1/brain/share`,
+        { share: true },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      const hash = response.data.hash;
+      const shareUrl = `http://localhost:5173/share/${hash}`;
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Your brain link has been copied to the clipboard!");
+      alert("Open it in new tab to view!");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while sharing your brain.");
+    }
+  }
+
   return (
     <div>
-      <Sidebar />
-      <div className="p-4 ml-72 min-h-screen  bg-gray-100 ">
+      <Sidebar selectedType={selectedType} onSelectType={handleSelectType} />
+      <div className="p-4 ml-72 min-h-screen bg-gray-100">
         <AddContentModal
           open={contentModalOpen}
           onClose={() => {
             setContentModalOpen(false);
           }}
         />
-        <div className="flex justify-end gap-4">
-          <Button
-            onClick={() => {
-              setContentModalOpen(true);
-            }}
-            variant="primary"
-            text="Add content"
-            startIcon={<PlusIcon />}
-          ></Button>
-          <Button
-            variant="secondary"
-            text="Share brain"
-            startIcon={<ShareIcon />}
-          ></Button>
+
+        <div className="flex justify-between items-center gap-4">
+          <input
+            type="text"
+            placeholder="Search by title..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="px-3 py-2 w-150  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <div className="flex gap-4">
+            <Button
+              variant="secondary"
+              text="Share Brain"
+              startIcon={<ShareIcon />}
+              onClick={shareBrain}
+            />
+            <Button
+              onClick={() => setContentModalOpen(true)}
+              variant="primary"
+              text="Add Content"
+              startIcon={<PlusIcon />}
+            />
+          </div>
         </div>
-        <div className="flex gap-4 flex-wrap">
-          {contents.map(({ type, link, title }) => (
-            <Card type={type} link={link} title={title} />
+        <div className="flex gap-4 flex-wrap mt-4">
+          {filteredContents.map(({ type, link, title }, idx) => (
+            <Card
+              key={`${type}-${idx}`}
+              type={type}
+              link={link}
+              title={title}
+            />
           ))}
-          {/* <Card
-            type="twitter"
-            link="https://twitter.com/username/status/807811447862468608"
-            title="tweet check"
-          />
-          <Card
-            type="youtube"
-            link="https://www.youtube.com/watch?v=XqIgIYmwP6E"
-            title="yt check"
-          />
-          <Card
-            type="gist"
-            link="https://gist.github.com/vikas38/f824ffb7bafec535d0b6452179f2d790"
-            title="gist check"
-          /> */}
         </div>
       </div>
     </div>
