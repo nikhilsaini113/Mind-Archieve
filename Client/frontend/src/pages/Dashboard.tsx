@@ -52,6 +52,23 @@ function Dashboard() {
     }
   }
 
+  async function handleDeleteContent(contentId: string) {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/v1/content`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+        data: {
+          contentId,
+        },
+      });
+      refresh();
+    } catch (err) {
+      alert("Failed to delete content");
+      console.error(err);
+    }
+  }
+
   return (
     <div>
       <Sidebar selectedType={selectedType} onSelectType={handleSelectType} />
@@ -87,12 +104,14 @@ function Dashboard() {
           </div>
         </div>
         <div className="flex gap-4 flex-wrap mt-4">
-          {filteredContents.map(({ type, link, title }, idx) => (
+          {filteredContents.map(({ _id, type, link, title }, idx) => (
             <Card
-              key={`${type}-${idx}`}
+              key={_id}
+              contentId={_id}
               type={type}
               link={link}
               title={title}
+              onDelete={handleDeleteContent}
             />
           ))}
         </div>

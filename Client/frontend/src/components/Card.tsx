@@ -1,13 +1,14 @@
-import { ShareIcon } from "../icons/ShareIcon";
 import Gist from "react-gist";
 import { TrashIcon } from "../icons/TrashIcon";
 import { NewTabIcon } from "../icons/NewTabIcon";
 interface CardProps {
+  contentId: string;
   title: string;
   link: string;
-  type: "twitter" | "youtube" | "gist";
+  type: "twitter" | "youtube" | "gist" | "other";
+  onDelete: (id: string) => void;
 }
-export function Card({ title, link, type }: CardProps) {
+export function Card({ contentId, title, link, type, onDelete }: CardProps) {
   return (
     <div className="p-4 bg-white rounded-md border border-gray-200 max-w-80 min-h-48 min-w-72 ">
       <div className="flex justify-between">
@@ -19,8 +20,10 @@ export function Card({ title, link, type }: CardProps) {
               <NewTabIcon />
             </a>
           </div>
-          <div className="text-gray-500 pl-1">
-            {/* <ShareIcon /> */}
+          <div
+            className="text-gray-500 pl-1 cursor-pointer"
+            onClick={() => onDelete(contentId)}
+          >
             <TrashIcon />
           </div>
         </div>
@@ -29,7 +32,15 @@ export function Card({ title, link, type }: CardProps) {
         {type === "youtube" && (
           <iframe
             className="w-full"
-            src={link.replace("watch", "embed").replace("?v=", "/")}
+            src={(link.startsWith("https://youtu.be/")
+              ? link.replace(
+                  "https://youtu.be/",
+                  "https://www.youtube.com/watch?v="
+                )
+              : link
+            )
+              .replace("watch", "embed")
+              .replace("?v=", "/")}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -48,7 +59,21 @@ export function Card({ title, link, type }: CardProps) {
             <Gist id={link.split("/").pop() || ""} />
           </div>
         )}
+        {type === "other" && (
+          <div className="pt-2 text-sm text-gray-700 break-words">
+            <p className="font-medium">Link:</p>
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline break-all"
+            >
+              {link}
+            </a>
+          </div>
+        )}
       </div>
+
       {/* <iframe
         className="w-full pt-4"
         src="https://www.youtube.com/embed/XqIgIYmwP6E?si=eyzKGXUb-grOteIE"

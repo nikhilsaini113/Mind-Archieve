@@ -1,4 +1,5 @@
 import { GithubIcon } from "../icons/GithubIcon";
+import { LinkIcon } from "../icons/LinkIcon";
 import { Logo } from "../icons/Logo";
 import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutubeIcon";
@@ -58,6 +59,12 @@ export function Sidebar({
             icon={<GithubIcon />}
             active={selectedType === "gist"}
             onClick={() => onSelectType("gist")}
+          />
+          <SidebarItem
+            text="Other Links"
+            icon={<LinkIcon />}
+            active={selectedType === "other"}
+            onClick={() => onSelectType("other")}
           />
         </div>
       </div>

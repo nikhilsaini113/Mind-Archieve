@@ -104,6 +104,7 @@ export function AddContentModal({ open, onClose }) {
                     <option value="youtube">YouTube</option>
                     <option value="twitter">Twitter</option>
                     <option value="gist">Github Gist</option>
+                    <option value="other">Others</option>
                   </select>
                 </div>
                 <div className="flex justify-center pt-4">
