@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mind Archive</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h2>Mind Archive</h2>
+
+    <div id="login-section">
+      <input id="username" placeholder="Username" />
+      <input id="password" type="password" placeholder="Password" />
+      <button id="login">Login</button>
+      <p id="login-status" class="small"></p>
+    </div>
+
+    <div id="content-section" class="hidden">
+      <p class="small">Logged in as <span id="logged-user"></span></p>
+      <input id="title" placeholder="Title" />
+      <input id="link" placeholder="Link" />
+      <select id="type">
+        <option value="youtube">YouTube</option>
+        <option value="twitter">Twitter</option>
+        <option value="gist">Github Gist</option>
+        <option value="other">Other</option>
+      </select>
+      <button id="submit">Add Content</button>
+      <p id="status" class="small"></p>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
