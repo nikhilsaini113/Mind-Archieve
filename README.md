@@ -27,7 +27,6 @@ It lets you:
 - 🗂️ **Filter by Type** on the dashboard sidebar
 - 🧠 **"Share Your Brain"** public URL for others to view your collection
 - 📎 **Chrome Extension** to add content without opening the site
-- 🧹 **Responsive UI** built using TailwindCSS
 - 🗑️ **Delete Content** with one click
 - 🔍 **Search functionality** on dashboard
 - 🔄 Auto-refresh content on modal close
@@ -58,7 +57,7 @@ The **Chrome Extension** makes adding content to your archive **instant**. Just 
 - Submit title, link, and type
 - Syncs directly with your Mind Archive account
 
-You can find the extension code inside the `extension/` folder in this repo.
+You can find the extension code inside the `Chrome Extension/` folder in this repo.
 
 ---
 
