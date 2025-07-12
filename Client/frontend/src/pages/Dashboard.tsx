@@ -104,7 +104,7 @@ function Dashboard() {
           </div>
         </div>
         <div className="flex gap-4 flex-wrap mt-4">
-          {filteredContents.map(({ _id, type, link, title }, idx) => (
+          {filteredContents.map(({ _id, type, link, title }) => (
             <Card
               key={_id}
               contentId={_id}

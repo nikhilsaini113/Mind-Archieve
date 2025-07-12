@@ -2,11 +2,11 @@ import Gist from "react-gist";
 import { TrashIcon } from "../icons/TrashIcon";
 import { NewTabIcon } from "../icons/NewTabIcon";
 interface CardProps {
-  contentId: string;
+  contentId?: string;
   title: string;
   link: string;
   type: "twitter" | "youtube" | "gist" | "other";
-  onDelete: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 export function Card({ contentId, title, link, type, onDelete }: CardProps) {
   return (
@@ -20,12 +20,14 @@ export function Card({ contentId, title, link, type, onDelete }: CardProps) {
               <NewTabIcon />
             </a>
           </div>
-          <div
-            className="text-gray-500 pl-1 cursor-pointer"
-            onClick={() => onDelete(contentId)}
-          >
-            <TrashIcon />
-          </div>
+          {onDelete && contentId && (
+            <div
+              className="text-gray-500 pl-1 cursor-pointer"
+              onClick={() => onDelete(contentId)}
+            >
+              <TrashIcon />
+            </div>
+          )}
         </div>
       </div>
       <div className="pt-4">

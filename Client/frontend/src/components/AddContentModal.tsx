@@ -36,12 +36,6 @@ import { Input } from "./Input";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 
-enum ContentType {
-  Youtube = "youtube",
-  Twitter = "twitter",
-  Github = "github",
-}
-
 export function AddContentModal({ open, onClose }) {
   const titleRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
