@@ -53,9 +53,16 @@ export function Card({ contentId, title, link, type, onDelete }: CardProps) {
         )}
 
         {type === "twitter" && (
-          <blockquote className="twitter-tweet">
-            <a href={link.replace("x.com", "twitter.com")}></a>
-          </blockquote>
+          <div>
+            <blockquote className="twitter-tweet">
+              <a href={link.replace("x.com", "twitter.com")}></a>
+            </blockquote>
+            <script
+              async
+              src="https://platform.twitter.com/widgets.js"
+              charSet="utf-8"
+            ></script>
+          </div>
         )}
         {type === "gist" && (
           <div>
