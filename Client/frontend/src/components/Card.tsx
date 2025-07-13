@@ -1,4 +1,5 @@
-import Gist from "react-gist";
+// import Gist from "react-gist";
+import Gist from "./GistLocal";
 import { TrashIcon } from "../icons/TrashIcon";
 import { NewTabIcon } from "../icons/NewTabIcon";
 interface CardProps {
