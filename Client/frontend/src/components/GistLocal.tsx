@@ -1,5 +1,5 @@
 // components/Gist.tsx
-import React, { PureComponent } from "react";
+import { PureComponent } from "react";
 
 export interface GistProps {
   id: string;
