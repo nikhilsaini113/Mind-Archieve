@@ -42,7 +42,7 @@ function Dashboard() {
         }
       );
       const hash = response.data.hash;
-      const shareUrl = `http://localhost:5173/share/${hash}`;
+      const shareUrl = `https://mind-archive.vercel.app/share/${hash}`;
       await navigator.clipboard.writeText(shareUrl);
       alert("Your brain link has been copied to the clipboard!");
       alert("Open it in new tab to view!");
